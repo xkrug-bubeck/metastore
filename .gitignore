@@ -19,3 +19,6 @@ Makefile.dep
 *.creator*
 *.files
 *.includes
+
+.kdev4/
+*.kdev4
