@@ -15,21 +15,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/**
+ * @file settings.h
+ * @author Przemyslaw Pawelczyk
+ * @brief File declaring the metastore application settings structure
+ * 
+ * The application settings have to be stored in order to pass them between functions
+ */
+
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
 #include <stdbool.h>
 
-/* Data structure to hold metastore settings */
+/**
+ * Data structure to hold metastore settings
+ */
 struct metasettings {
-	char *metafile;          /* path to the file containing the metadata */
-	bool do_mtime;           /* should mtimes be corrected? */
-	bool do_emptydirs;       /* should empty dirs be recreated? */
-	bool do_removeemptydirs; /* should new empty dirs be removed? */
-	bool do_git;             /* should .git dirs be processed? */
+	char *metafile;          /**< path to the file containing the metadata */
+	bool do_mtime;           /**< should mtimes be corrected? */
+	bool do_emptydirs;       /**< should empty dirs be recreated? */
+	bool do_removeemptydirs; /**< should new empty dirs be removed? */
+	bool do_git;             /**< should .git dirs be processed? */
 };
 
-/* Convenient typedef for immutable settings */
+/**
+ * Convenient typedef for immutable settings
+ */
 typedef const struct metasettings msettings;
 
 #endif /* SETTINGS_H */

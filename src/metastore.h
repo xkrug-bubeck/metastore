@@ -17,16 +17,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/**
+ * @file metastore.h
+ * @author David Härdeman
+ * @brief File declaring the macros used in the application
+ */
+
 #ifndef METASTORE_H
 #define METASTORE_H
 
 /* Each file starts with SIGNATURE and VERSION */
+
+/**
+ * metastore file signature
+ */
 #define SIGNATURE    "MeTaSt00r3"
 #define SIGNATURELEN 10
+/**
+ * metastore file format version
+ */
 #define VERSION      "\0\0\0\0\0\0\0\0"
 #define VERSIONLEN   8
 
-/* Default filename */
+/**
+ * Default filename for metadata
+ */
 #define METAFILE     "./.metadata"
 
 /* Utility defines for the action to take */

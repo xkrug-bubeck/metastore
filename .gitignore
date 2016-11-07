@@ -20,5 +20,7 @@ Makefile.dep
 *.files
 *.includes
 
+doc/
+
 .kdev4/
 *.kdev4
