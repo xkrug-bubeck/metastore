@@ -89,7 +89,7 @@ struct metaentry *mentry_create(const char *path);
  * @param st    Pointer to application settings struct
  */
 void mentries_recurse_path(const char *opath, struct metahash **mhash,
-                           msettings *st);
+                           struct metasettings *st);
 
 /**
  * Stores a metaentry list to a file

@@ -41,6 +41,8 @@ static struct metasettings settings = {
 	.do_emptydirs = false,
 	.do_removeemptydirs = false,
 	.do_git = false,
+	.do_one_fs = false,
+	.device_id = 0,
 };
 
 /* Used to create lists of dirs / other files which are missing in the fs */
@@ -429,6 +431,7 @@ usage(const char *arg0, const char *message)
 "  -e, --empty-dirs         Recreate missing empty directories\n"
 "  -E, --remove-empty-dirs  Remove extra empty directories\n"
 "  -g, --git                Do not omit .git directories\n"
+"  -o, --one-file-system    Stay within the root folder's file system\n"
 "  -f, --file=FILE          Set metadata file (" METAFILE " by default)\n"
 	    );
 
@@ -449,6 +452,7 @@ static struct option long_options[] = {
 	{ "empty-dirs",        no_argument,       NULL, 'e' },
 	{ "remove-empty-dirs", no_argument,       NULL, 'E' },
 	{ "git",               no_argument,       NULL, 'g' },
+	{ "one-file-system",   no_argument,       NULL, 'o' },
 	{ "file",              required_argument, NULL, 'f' },
 	{ NULL, 0, NULL, 0 }
 };
@@ -466,7 +470,7 @@ main(int argc, char **argv)
 	i = 0;
 	while (1) {
 		int option_index = 0;
-		c = getopt_long(argc, argv, "csadVhvqmeEgf:",
+		c = getopt_long(argc, argv, "csadVhvqmeEgof:",
 		                long_options, &option_index);
 		if (c == -1)
 			break;
@@ -484,6 +488,7 @@ main(int argc, char **argv)
 		case 'E': /* remove-empty-dirs */ settings.do_removeemptydirs = true;
 			                              break;
 		case 'g': /* git */               settings.do_git = true;        break;
+		case 'o': /* git */               settings.do_one_fs = true;     break;
 		case 'f': /* file */              settings.metafile = optarg;    break;
 		default:
 			usage(argv[0], "unknown option");

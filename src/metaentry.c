@@ -342,6 +342,9 @@ mentries_recurse(const char *path, struct metahash *mhash, msettings *st)
 		    path, strerror(errno));
 		return;
 	}
+	if (st->do_one_fs && (st->device_id != (unsigned long long int)sbuf.st_dev)) {
+		return;
+	}
 
 	mentry = mentry_create(path);
 	if (!mentry)
@@ -374,9 +377,20 @@ mentries_recurse(const char *path, struct metahash *mhash, msettings *st)
 
 /* Recurses opath and adds metadata entries to the metaentry list */
 void
-mentries_recurse_path(const char *opath, struct metahash **mhash, msettings *st)
+mentries_recurse_path(const char *opath, struct metahash **mhash, struct metasettings *st)
 {
+	struct stat sbuf;
 	char *path = normalize_path(opath);
+	if (!path)
+		return;
+	if (st->do_one_fs) {
+		if (lstat(path, &sbuf)) {
+			msg(MSG_ERROR, "lstat failed for %s: %s\n",
+			    path, strerror(errno));
+			return;
+		}
+		st->device_id = (unsigned long long int)sbuf.st_dev;
+	}
 
 	if (!(*mhash))
 		*mhash = mhash_alloc();

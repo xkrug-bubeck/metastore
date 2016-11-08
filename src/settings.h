@@ -37,6 +37,8 @@ struct metasettings {
 	bool do_emptydirs;       /**< should empty dirs be recreated? */
 	bool do_removeemptydirs; /**< should new empty dirs be removed? */
 	bool do_git;             /**< should .git dirs be processed? */
+	bool do_one_fs;          /**< should processing only be done within this FS? */
+	unsigned long long int device_id;      /**< device id storage if do_one_fs */
 };
 
 /**
