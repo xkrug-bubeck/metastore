@@ -308,7 +308,9 @@ normalize_path(const char *orig)
 	getcwd(cwd, PATH_MAX);
 	if (!real)
 		return NULL;
-
+	if (!strncmp(cwd, "/", strlen(cwd))) {
+		return real;
+	}
 	if (!strncmp(real, cwd, strlen(cwd))) {
 		result = xmalloc(strlen(real) - strlen(cwd) + 1 + 1);
 		result[0] = '\0';
