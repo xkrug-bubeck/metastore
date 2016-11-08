@@ -308,7 +308,7 @@ normalize_path(const char *orig)
 	getcwd(cwd, PATH_MAX);
 	if (!real)
 		return NULL;
-	if (!strncmp(cwd, "/", strlen(cwd))) {
+	if (!strncmp(cwd, "/", strlen(cwd)) && !(strlen(cwd) == 1)) {
 		return real;
 	}
 	if (!strncmp(real, cwd, strlen(cwd))) {
