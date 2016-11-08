@@ -1,4 +1,4 @@
-Version 0
+Version TEXT0001
 ---------
 
 Following sections explain internals of metastore file (.metadata).
@@ -6,37 +6,39 @@ Following sections explain internals of metastore file (.metadata).
 
 ### Data types
 
-    CSTRING     = NUL-terminated binary string
-    BSTRING(N)  = binary string of length N
-    INT(N)      = N byte integer in big endian byte order
+    STRING(N)   = String (N means fixed size)
+    INT         = Integer up to 2^64-1 in big endian byte order
 
 
 ### File layout
 
-    HEADER
+    HEADER\n
     N * ENTRY
 
 
 ### HEADER format
 
-    BSTRING(10) - Magic header - "MeTaSt00r3"
-    BSTRING(8)  - Version - "\0\0\0\0\0\0\0\0" (currently)
+    STRING(10) - Magic header - "MeTaSt00r3"
+    STRING(8)  - Version - "TEXT0001" (currently)
 
 
 ### ENTRY format
 
-    CSTRING     - Path  (absolute or relative)
-    CSTRING     - Owner (owner name, not uid)
-    CSTRING     - Group (group name, not gid)
+    STRING;     - Path  (absolute or relative)
+    STRING;     - Owner (owner name, not uid)
+    STRING;     - Group (group name, not gid)
 
-    INT(8)      - Mtime (seconds)
-    INT(8)      - Mtime (nanoseconds)
-    INT(2)      - Mode  (st_mode from struct stat st_mode AND 0177777,
+    INT;        - Mtime (seconds)
+    INT;        - Mtime (nanoseconds)
+    INT;        - Mode  (st_mode from struct stat st_mode AND 0177777,
                          i.e. unix permissions and type of file)
 
-    INT(4)      - num_xattrs
+    INT;        - num_xattrs
     FOR (i = 0; i < num_xattrs; i++) {
-        CSTRING            - xattr name
-        INT(4)             - xattrlen
-        BSTRING(xattrlen)  - xattr value
+        STRING;            - xattr name
+        INT;               - xattrlen 
+        FOR (j = 0; j < xattrlen; j++) {
+            INT;               - xattr value
+        }
     }
+    \n
