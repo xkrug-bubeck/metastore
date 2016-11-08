@@ -39,6 +39,12 @@
 /* For struct group */
 #include <grp.h>
 
+
+/**
+ * Character separating the single entries
+ */
+#define SEPARATOR ((char)';')
+
 /**
  * Adjusts the verbosity level for msg()
  * @param adj Number defining the verbosity level (see MSG_* macros)
@@ -91,12 +97,11 @@ void binary_print(const char *s, ssize_t len);
 void xfwrite(const void *ptr, size_t size, FILE *stream);
 
 /**
- * Writes an int to a file, using len bytes, in bigendian order
+ * Writes an int to a file, using len bytes, in bigendian order, with separator
  * @param value Integer that shall be written
- * @param len   Bytes that shall be written
  * @param to    File that shall be written to
  */
-void write_int(uint64_t value, size_t len, FILE *to);
+void write_int(uint64_t value, FILE *to);
 
 /**
  * Writes a binary string to a file
@@ -106,21 +111,21 @@ void write_int(uint64_t value, size_t len, FILE *to);
  */
 void write_binary_string(const char *string, size_t len, FILE *to);
 
+
 /**
- * Writes a normal C string to a file
+ * Writes a normal C string to a file, with separator
  * @param string String that shall be written
  * @param to     File that shall be written to
  */
 void write_string(const char *string, FILE *to);
 
 /**
- * Reads an int from a string, using len bytes, in bigendian order
+ * Reads an int from a string, using len bytes, in bigendian order, with separator
  * @param from Pointer to string representation of the file
- * @param len  Bytes that shall be read for this integer
  * @param max  Pointer to the end of the buffer
  * @return Integer read from the file
  */
-uint64_t read_int(char **from, size_t len, const char *max);
+uint64_t read_int(char **from, const char *max);
 
 /**
  * Reads a binary string from a file
@@ -132,7 +137,7 @@ uint64_t read_int(char **from, size_t len, const char *max);
 char *read_binary_string(char **from, size_t len, const char *max);
 
 /**
- * Reads a normal C string from a file
+ * Reads a normal C string from a file with separator
  * @param from Pointer to string representation of the file
  * @param max  Pointer to the end of the buffer
  * @return Null-teminated string read from the file
