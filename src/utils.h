@@ -31,6 +31,9 @@
 /* For struct group */
 #include <grp.h>
 
+/* Character separating the single entries */
+#define SEPARATOR ((char)':')
+
 /* Adjusts the verbosity level for msg() */
 void adjust_verbosity(int adj);
 
@@ -57,22 +60,22 @@ void binary_print(const char *s, ssize_t len);
 /* Writes data to a file or exits on failure */
 void xfwrite(const void *ptr, size_t size, FILE *stream);
 
-/* Writes an int to a file, using len bytes, in bigendian order */
-void write_int(uint64_t value, size_t len, FILE *to);
+/* Writes an int to a file, using len bytes, in bigendian order, with separator */
+void write_int(uint64_t value, FILE *to);
 
 /* Writes a binary string to a file */
 void write_binary_string(const char *string, size_t len, FILE *to);
 
-/* Writes a normal C string to a file */
+/* Writes a normal C string to a file including a separator */
 void write_string(const char *string, FILE *to);
 
-/* Reads an int from a file, using len bytes, in bigendian order */
-uint64_t read_int(char **from, size_t len, const char *max);
+/* Reads an int from a file, using len bytes, in bigendian order, with separator */
+uint64_t read_int(char **from, const char *max);
 
 /* Reads a binary string from a file */
 char *read_binary_string(char **from, size_t len, const char *max);
 
-/* Reads a normal C string from a file */
+/* Reads a normal C string from a file and takes care of the separator*/
 char *read_string(char **from, const char *max);
 
 /* Caching version of getgrnam */

@@ -116,16 +116,17 @@ xfwrite(const void *ptr, size_t size, FILE *stream)
 	}
 }
 
-/* Writes an int to a file, using len bytes, in bigendian order */
+/* Writes an int to a file, using len bytes, in bigendian order, with separator */
 void
-write_int(uint64_t value, size_t len, FILE *to)
+write_int(uint64_t value, FILE *to)
 {
-	char buf[len];
-	size_t i;
+	char buf[32]; // base 10 string representation of long long unsigned int has at max 20 chars
+	int result;
 
-	for (i = 0; i < len; i++)
-		buf[i] = ((value >> (8 * i)) & 0xff);
-	xfwrite(buf, len, to);
+	result = sprintf(buf, "%llu%c", (long long unsigned int)value, SEPARATOR);
+	if (result < 0)
+		msg(MSG_CRITICAL, "Integer could not be converted to string\n");
+	xfwrite(buf, strlen(buf), to);
 }
 
 /* Writes a binary string to a file */
@@ -135,33 +136,44 @@ write_binary_string(const char *string, size_t len, FILE *to)
 	xfwrite(string, len, to);
 }
 
-/* Writes a normal C string to a file */
+/* Writes a normal C string to a file, with separator */
 void
 write_string(const char *string, FILE *to)
 {
-	xfwrite(string, strlen(string) + 1, to);
+	char sep[1];
+
+	*sep = SEPARATOR;
+	xfwrite(string, strlen(string), to);
+	xfwrite(sep, 1, to);
 }
 
-/* Reads an int from a file, using len bytes, in bigendian order */
+/* Reads an int from a file, using len characters, in bigendian order, with separator */
 uint64_t
-read_int(char **from, size_t len, const char *max)
+read_int(char **from, const char *max)
 {
 	uint64_t result = 0;
-	size_t i;
+	char *endptr, *separator;
 
-	if (*from + len > max) {
+	separator = strchr(*from, SEPARATOR);
+	if (separator == NULL || separator > max) {
 		msg(MSG_CRITICAL,
-		    "Attempt to read beyond end of file, corrupt file?\n");
+		    "Attempt to read integer beyond end of file, corrupt file?\n");
 		exit(EXIT_FAILURE);
 	}
+	result = (uint64_t) strtoull(*from,&endptr,10);
 
-	for (i = 0; i < len; i++)
-		result += (((*from)[i] & 0xff) << (8 * i));
-	*from += len;
+	if (errno == ERANGE)
+		msg(MSG_CRITICAL, "String could not be converted to integer\n");
+
+	if (result == 0ULL && endptr != separator)
+		msg(MSG_CRITICAL, "Integer could not be read from file\n");
+
+	endptr++;
+	*from = endptr;
 	return result;
 }
 
-/* Reads a binary string from a file */
+/* Reads a normal C string from a file */
 char *
 read_binary_string(char **from, size_t len, const char *max)
 {
@@ -169,21 +181,27 @@ read_binary_string(char **from, size_t len, const char *max)
 
 	if (*from + len > max) {
 		msg(MSG_CRITICAL,
-		    "Attempt to read beyond end of file, corrupt file?\n");
+		    "Attempt to read string beyond end of file, corrupt file?\n");
 		exit(EXIT_FAILURE);
 	}
-
-	result = xmalloc(len);
+	result = xmalloc(len + 1);
 	memcpy(result, *from, len);
 	*from += len;
 	return result;
 }
 
-/* Reads a normal C string from a file */
+/* Reads a normal C string from a file with separator*/
 char *
 read_string(char **from, const char *max)
 {
-	return read_binary_string(from, strlen(*from) + 1, max);
+	char *separator, *result;
+	size_t len;
+
+	separator = strchr(*from, SEPARATOR);
+	len = separator - *from;
+	result = read_binary_string(from, len, max);
+	(*from)++;
+	return result;
 }
 
 /* For group caching */

@@ -23,7 +23,9 @@
 /* Each file starts with SIGNATURE and VERSION */
 #define SIGNATURE    "MeTaSt00r3"
 #define SIGNATURELEN 10
-#define VERSION      "\0\0\0\0\0\0\0\0"
+
+/* metastore file format version */
+#define VERSION      "TEXT0001"
 #define VERSIONLEN   8
 
 /* Default filename */
