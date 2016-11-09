@@ -313,8 +313,16 @@ normalize_path(const char *orig)
 		result = xmalloc(strlen(real) - strlen(cwd) + 1 + 1);
 		result[0] = '\0';
 		strcat(result, ".");
-		strcat(result, real + strlen(cwd));
-	} else {
+		/* handle a singular case where you use paths as parameter from the root folder '/' */
+		if ((strlen(cwd) == 1) && (strlen(cwd) != strlen(real))) {
+			strcat(result, real);
+		}
+		/* all other use cases where CWD is a parent directory of the path to process */
+		else {
+			strcat(result, real + strlen(cwd));
+		}
+	}
+	else {
 		result = xstrdup(real);
 	}
 
