@@ -342,7 +342,8 @@ mentries_recurse(const char *path, struct metahash *mhash, msettings *st)
 		    path, strerror(errno));
 		return;
 	}
-	if (st->do_one_fs && (st->device_id != (unsigned long long int)sbuf.st_dev)) {
+	if ((st->restrict_to_fs == (int)CommandLineOption_RestrictFS) 
+	    && (st->device_id != (unsigned long long int)sbuf.st_dev)) {
 		return;
 	}
 
@@ -383,7 +384,7 @@ mentries_recurse_path(const char *opath, struct metahash **mhash, struct metaset
 	char *path = normalize_path(opath);
 	if (!path)
 		return;
-	if (st->do_one_fs) {
+	if (st->restrict_to_fs == (int)CommandLineOption_RestrictFS) {
 		if (lstat(path, &sbuf)) {
 			msg(MSG_ERROR, "lstat failed for %s: %s\n",
 			    path, strerror(errno));
