@@ -24,21 +24,21 @@ Following sections explain internals of metastore file (.metadata).
 
 ### ENTRY format
 
-    STRING:     - Path  (absolute or relative)
-    STRING:     - Owner (owner name, not uid)
-    STRING:     - Group (group name, not gid)
+    STRING;     - Path  (absolute or relative)
+    STRING;     - Owner (owner name, not uid)
+    STRING;     - Group (group name, not gid)
 
-    INT:        - Mtime (seconds)
-    INT:        - Mtime (nanoseconds)
-    INT:        - Mode  (st_mode from struct stat st_mode AND 0177777,
+    INT;        - Mtime (seconds)
+    INT;        - Mtime (nanoseconds)
+    INT;        - Mode  (st_mode from struct stat st_mode AND 0177777,
                          i.e. unix permissions and type of file)
 
-    INT:        - num_xattrs
+    INT;        - num_xattrs
     FOR (i = 0; i < num_xattrs; i++) {
-        STRING:            - xattr name
-        INT:               - xattrlen 
+        STRING;            - xattr name
+        INT;               - xattrlen 
         FOR (j = 0; j < xattrlen; j++) {
-            INT:               - xattr value
+            INT;               - xattr value
         }
     }
     \n

@@ -32,7 +32,7 @@
 #include <grp.h>
 
 /* Character separating the single entries */
-#define SEPARATOR ((char)':')
+#define SEPARATOR ((char)';')
 
 /* Adjusts the verbosity level for msg() */
 void adjust_verbosity(int adj);
